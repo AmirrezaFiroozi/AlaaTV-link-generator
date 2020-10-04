@@ -2,10 +2,12 @@
 
 # Written By Amirreza Firoozi under the license of GPLv3+
 # For more information refer to the license file you've received with this file
-
-import sys
-import requests
+import json
+import os
 import re
+import sys
+
+import requests
 from bs4 import BeautifulSoup
 
 # get course_link as a sys argument or internal input
@@ -21,21 +23,23 @@ else:
 
 # exit if link not provided
 if course_link == '':
-    print('No Valid link entered. Exitting...')
+    print('No Valid link entered. Exiting...')
     sys.exit(1)
+
+# try to load the page
 try:
     page = requests.get(course_link)
 except:
-    print(
-        f'cannot GET url {course_link}. Valid URL scheme: https://alaatv.com/set/000')
+    print(f'cannot GET url {course_link}. Valid URL scheme: https://alaatv.com/set/000')
     sys.exit(1)
 
-if page.status_code != 200:
-    print(
-        f'Error {page.status_code} while fetching url {course_link}. Exitting...')
+# check status code for a valid response
+if page.status_code not in [200, 301, 302]:
+    print(f'Error {page.status_code} while fetching url {course_link}. Exiting ...')
     sys.exit(2)
 
 soup = BeautifulSoup(page.content, 'html.parser')
+data = dict()
 for script_tag in soup.find_all('script'):
     script_tag = str(script_tag)
     if 'var videos' not in script_tag:
