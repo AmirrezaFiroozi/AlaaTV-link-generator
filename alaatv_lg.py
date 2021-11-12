@@ -12,7 +12,7 @@ SEPARATOR = '\n'
 
 course_link = input('')
 if course_link == '':
-    print('No Valid link entered. Exitting...')
+    print('No Valid link entered. Exiting...')
     sys.exit(1)
 try:
     page = requests.get(course_link)
@@ -23,7 +23,7 @@ except:
 
 if page.status_code != 200:
     print(
-        f'Error {page.status_code} while fetching url {course_link}. Exitting...')
+        f'Error {page.status_code} while fetching url {course_link}. Exiting...')
     sys.exit(2)
 
 soup = BeautifulSoup(page.content, 'html.parser')
